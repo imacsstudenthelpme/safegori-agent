@@ -1,0 +1,201 @@
+# 재해종류 규칙
+# rewrites: 원본 값을 바꾸는 규칙 (위에서부터 차례로 적용)
+# extract: 재해종류 컬럼이 비어 있을 때(제조업 시트) 문장에서 뽑아내는 규칙. 위에서부터 처음 맞는 것을 씁니다.
+#   phrase_any = 재해유발요인 문장, summary_any = 재해개요 문장에 포함되면 해당
+# classify: 재해종류 단위 상위분류와 다르게, 사례별로 상위분류를 보정하는 규칙 (CLASSIFIED_AS)
+rewrites:
+- when:
+    at:
+    - 이상온도 접촉
+  set:
+    at: 온열질환(폭염)
+  note: 원본 이상온도 접촉 → 온열질환으로 재분류
+- when:
+    at:
+    - 온열질환(폭염)
+    object_any:
+    - 분류불능
+    - 분류 불가
+  set:
+    co: 고온 작업환경(폭염)
+  note: 원본 분류불능 → 고온 작업환경(폭염)
+extract:
+- type: 온열질환(폭염)
+  phrase_any:
+  - 더운 날씨
+  source: 유발요인(열사병)에서 추출
+- type: 온열질환(폭염)
+  summary_any:
+  - 열사병
+  - 온열
+  - 폭염
+  source: 개요에서 추출
+- type: 감전
+  summary_any:
+  - 감전
+  source: 개요에서 추출
+- type: 질식
+  summary_any:
+  - 질식
+  - 산소결핍
+  source: 개요에서 추출
+- type: 중독
+  summary_any:
+  - 중독
+  - 가스에 노출
+  - 흡입
+  source: 개요에서 추출
+- type: 폭발
+  summary_any:
+  - 폭발
+  source: 개요에서 추출
+- type: 파열
+  summary_any:
+  - 파열
+  source: 개요에서 추출
+- type: 화재
+  summary_any:
+  - 화재
+  - 화염
+  - '불이 '
+  - 불길
+  source: 개요에서 추출
+- type: 화상
+  summary_any:
+  - 화상
+  - 데어
+  - 수증기
+  - 고온
+  source: 개요에서 추출
+- type: 익사
+  summary_any:
+  - 익사
+  - 물에 빠
+  - 익수
+  - 바다에 빠
+  - 수중
+  source: 개요에서 추출
+- type: 끼임
+  summary_any:
+  - 끼여
+  - 끼어
+  - 끼임
+  - 협착
+  - 말려
+  - 끼였
+  - 말리
+  source: 개요에서 추출
+- type: 깔림
+  summary_any:
+  - 깔려
+  - 깔림
+  - 깔렸
+  source: 개요에서 추출
+- type: 낙하
+  summary_any:
+  - 맞아
+  - 맞고
+  - 맞음
+  - 맞는
+  - 튕겨
+  - 비래
+  - 날아온
+  - 가격
+  - 덮쳐
+  - 덮치
+  source: 개요에서 추출
+- type: 부딪힘
+  summary_any:
+  - 부딪
+  - 충돌
+  - 치여
+  - 치어
+  - 받혀
+  - 부딫
+  source: 개요에서 추출
+- type: 추락
+  summary_any:
+  - 떨어져
+  - 추락
+  - 떨어지
+  - 떨어졌
+  - 추락하
+  - 떨어짐
+  - 떨여져
+  source: 개요에서 추출
+- type: 전도
+  summary_any:
+  - 넘어져
+  - 넘어지
+  - 전도
+  source: 개요에서 추출
+- type: 베임
+  summary_any:
+  - 베여
+  - 베임
+  - 절단
+  - 잘려
+  source: 개요에서 추출
+- type: 찔림
+  summary_any:
+  - 찔려
+  - 찔림
+  source: 개요에서 추출
+- type: 추락
+  phrase_any:
+  - 떨어짐
+  source: 유발요인 문구에서 추출
+- type: 끼임
+  phrase_any:
+  - 끼임
+  source: 유발요인 문구에서 추출
+- type: 깔림
+  phrase_any:
+  - 깔림
+  source: 유발요인 문구에서 추출
+- type: 낙하
+  phrase_any:
+  - 낙하
+  - 맞음
+  source: 유발요인 문구에서 추출
+- type: 부딪힘
+  phrase_any:
+  - 부딪
+  source: 유발요인 문구에서 추출
+- type: 감전
+  phrase_any:
+  - 감전
+  source: 유발요인 문구에서 추출
+- type: 화재
+  phrase_any:
+  - 화재
+  source: 유발요인 문구에서 추출
+- type: 질식
+  phrase_any:
+  - 질식
+  source: 유발요인 문구에서 추출
+extract_default:
+  type: 기타
+  source: 추출 실패 → 기타
+classify:
+- when:
+    sector: C
+    at:
+    - 전도
+    category:
+    - 구조물
+    object_any:
+    - 바닥
+    - 계단
+  group: 떨어짐·넘어짐
+  note: 전도 중 사람이 넘어진 사례로 보정
+- when:
+    sector: M
+    at:
+    - 전도
+    phrase_any:
+    - 바닥
+    - 요철
+    - 미끄러
+  group: 떨어짐·넘어짐
+  note: 전도 중 사람이 넘어진 사례로 보정
