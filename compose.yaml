@@ -1,0 +1,16 @@
+name: capstone-fresh
+
+services:
+  neo4j:
+    image: neo4j:5.26-community
+    ports:
+      - "127.0.0.1:7475:7474"
+      - "127.0.0.1:7688:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in backend/.env}"
+      NEO4J_server_memory_heap_max__size: "1G"
+    volumes:
+      - ontology_data:/data
+
+volumes:
+  ontology_data:

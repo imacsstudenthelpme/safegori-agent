@@ -3,3 +3,8 @@ uvicorn[standard]
 openai
 python-dotenv
 neo4j
+
+numpy
+pandas
+openpyxl
+PyYAML

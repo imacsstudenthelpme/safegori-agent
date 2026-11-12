@@ -65,6 +65,6 @@ export default function App() {
     <div className="view-slot" hidden={selectedMenu !== 'cases'}><CasesPanel/></div>
     <div className="view-slot about-slot" hidden={selectedMenu !== 'about'}><AboutPanel onNavigate={navigate} presentation={presentation} onPresentation={() => setPresentation(!presentation)}/></div>
     {selectedMenu === 'settings' && <div className="view-slot"><SettingsPanel onChange={changeSettings} onClear={chats.clearAll}/></div>}
-    <div className="chat-slot expanded" hidden={selectedMenu !== 'chat'}><ChatPanel key={chats.activeId} messages={chats.messages} setMessages={chats.updateMessages} storageError={chats.storageError}/></div>
+    <div className="chat-slot expanded" hidden={selectedMenu !== 'chat'}><ChatPanel key={chats.activeId} messages={chats.messages} setMessages={chats.updateMessages} storageError={chats.storageError} onNewConversation={chats.newConversation}/></div>
   </div></SettingsContext.Provider>;
 }
